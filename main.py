@@ -1,8 +1,8 @@
+from PIL import Image
 import numpy as np
 import matplotlib.pyplot as plt
 from skimage.io import imread
 from skimage.color import rgb2gray
-from PIL import Image
 
 def add_stripes(image_array, stripe_width):
     height, width = image_array.shape
