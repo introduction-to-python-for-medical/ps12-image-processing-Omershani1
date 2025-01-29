@@ -29,3 +29,4 @@ plt.imshow(striped_image, cmap='gray')
 plt.title('Striped Costa Rica')
 plt.axis('off')
 plt.show()
+
