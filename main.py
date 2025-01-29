@@ -9,7 +9,7 @@ def add_stripes(image_array, stripe_width):
     striped_image = image_array.copy()
 
     for i in range(0, width, 2 * stripe_width):
-        striped_image[:, i:i + stripe_width] = 0  # פסים שחורים
+        striped_image[:, i:i + stripe_width] = 0  
 
     return striped_image
 
