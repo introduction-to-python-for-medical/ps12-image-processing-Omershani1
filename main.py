@@ -5,6 +5,9 @@ from skimage.io import imread
 from skimage.color import rgb2gray
 
 def add_stripes(image_array, stripe_width):
+    if image_array.ndim != 2:
+        raise ValueError(f"Expected a grayscale (2D) image, but got shape: {image_array.shape}")
+
     height, width = image_array.shape
     striped_image = image_array.copy()
 
@@ -15,8 +18,11 @@ def add_stripes(image_array, stripe_width):
 
 image_array = imread('costarica.jpg')
 
-if image_array.ndim == 3:
+print(f"Original shape: {image_array.shape}")  
+
+if image_array.ndim == 3:  
     image_array = rgb2gray(image_array)
+    print(f"Converted to grayscale, new shape: {image_array.shape}")  
 
 image_array = (image_array * 255).astype(np.uint8)
 
@@ -29,4 +35,3 @@ plt.imshow(striped_image, cmap='gray')
 plt.title('Striped Costa Rica')
 plt.axis('off')
 plt.show()
-
