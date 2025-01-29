@@ -1,8 +1,11 @@
 from PIL import Image
 import numpy as np
+from scipy.signal import convolve
+from image_utils import load_image, edge_detection
+from PIL import Image
+from skimage.filters import median
+from skimage.morphology import ball
 import matplotlib.pyplot as plt
-from skimage.io import imread
-from skimage.color import rgb2gray
 
 def add_stripes(image_array, stripe_width):
     if image_array.ndim != 2:
