@@ -1,47 +1,33 @@
+from image_utils import load_image, edge_detection
 from PIL import Image
-import numpy as np
-import matplotlib.pyplot as plt
-from skimage.io import imread
-from skimage.color import rgb2gray
 from skimage.filters import median
-from skimage.morphology import disk  
+from skimage.morphology import ball
+import matplotlib.pyplot as plt
+import numpy as np
+from scipy.ndimage import convolve 
 
-def add_stripes(image_array, stripe_width):
-    if image_array.ndim != 2:
-        raise ValueError(f"Expected a grayscale (2D) image, but got shape: {image_array.shape}")
+def suppress_noise(image_array):
+    clean_image = median(image_array, ball(3))
+    return clean_image
 
-    height, width = image_array.shape
-    striped_image = image_array.copy()
+def detect_edges(clean_image):
+    edges = edge_detection(clean_image)
+    return edges 
 
-    for i in range(0, width, 2 * stripe_width):
-        striped_image[:, i:i + stripe_width] = 0  
+def convert_to_binary(edges, threshold):
+    binary_image = (edges > threshold).astype(np.uint8)
+    return binary_image
 
-    return striped_image
+def save_image(binary_image, file_name):
+    edge_image = Image.fromarray(binary_image*255)
+    edge_image.save(file_name)
 
-image_array = imread('costarica.jpg')
+image_array = load_image('costarica.jpg')
+clean_image = suppress_noise(image_array)
+edges = detect_edges(clean_image)
+binary_image = convert_to_binary(edges, threshold=50)
+save_image(binary_image, 'my_edges.png')
 
-print(f"Original shape: {image_array.shape}")  
-
-if image_array.ndim == 3:  
-    image_array = rgb2gray(image_array)
-    print(f"Converted to grayscale, new shape: {image_array.shape}")  
-
-image_array = (image_array * 255).astype(np.uint8)
-
-image_array = median(image_array, disk(3))
-
-striped_image = add_stripes(image_array, stripe_width=20)
-
-image_pil = Image.fromarray(striped_image, mode='L')
-image_pil.save('striped_costarica.jpeg')
-
-plt.imshow(striped_image, cmap='gray')
-plt.title('Striped Costa Rica')
-plt.axis('off')
-plt.show()
-
-
-plt.imshow(striped_image, cmap='gray')
-plt.title('Striped Costa Rica')
-plt.axis('off')
+plt.imshow(binary_image, cmap='gray')
+plt.title('Binary Image')
 plt.show()
